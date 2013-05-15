@@ -1,6 +1,8 @@
 package firebase
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestNewFirebase(t *testing.T) {
 	// Create new firebase instance
