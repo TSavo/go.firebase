@@ -82,7 +82,7 @@ func (f *firebaseRoot) Update(path string, v interface{}) ([]byte, error) {
 	}
 	json := bytes.NewBuffer(b)
 
-	body, err := f.SendRequest("POST", path, json)
+	body, err := f.SendRequest("PATCH", path, json)
 	if err != nil {
 		return nil, err
 	}
