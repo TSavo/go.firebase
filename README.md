@@ -1,6 +1,6 @@
 # go.firebase
 
-I wrote a simple Firebase REST client in Go. Use this package to quickly update your Firebase from the backend. I hope it's helpful =)
+I wrote a simple REST client in Go for the Firebase backend API. Use this package to quickly update your firebase. I hope someone finds it helpful =)
 
 ## Installation
 

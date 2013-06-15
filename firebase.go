@@ -29,7 +29,7 @@ Instance Methods
 Firebase Package - REST Interface
 */
 
-// Writes and returns the data to firebase endpoint
+// Writes and returns the data to the firebase endpoint
 // Example: firebase.Set('/users/info', [struct]) => []byte(data), error
 func (f *firebaseRoot) set(path string, v interface{}) ([]byte, error) {
 	b, err := json.Marshal(v)
@@ -53,8 +53,9 @@ func (f *firebaseRoot) set(path string, v interface{}) ([]byte, error) {
 
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("bad http response: %v", resp.Status)
+		return nil, fmt.Errorf("Bad HTTP Response: %v", resp.Status)
 	}
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
