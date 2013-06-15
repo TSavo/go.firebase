@@ -24,15 +24,15 @@ Currently go.firebase supports Get, Set, Update, Push, Delete
 ````
 msg := Message{testing: "1..2..3"}
 
-firebaseRoot.Set("/path", msg) // Returns data in json
+firebaseRoot.Set("/path", msg)
 
-firebaseRoot.Get("/path") // Returns data in json
+firebaseRoot.Get("/path")
 
-firebaseRoot.Push("/path", msg) // Returns data in json
+firebaseRoot.Push("/path", msg)
 
-firebaseRoot.Update("/path", msg) // Returns data in json
+firebaseRoot.Update("/path", msg)
 
-firebaseRoot.Delete("/path") // Returns true or false
+firebaseRoot.Delete("/path")
 ````
 
 ## License
