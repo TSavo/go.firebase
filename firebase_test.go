@@ -58,25 +58,28 @@ func TestGetObject(t *testing.T) {
 func TestPushObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	msg := Message{"testing", "1..2..3"}
-	_, err := firebaseRoot.Push("/messages", msg)
+	body, err := firebaseRoot.Push("/messages", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
+	t.Logf("%q", body)
 }
 
 func TestUpdateObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	msg := Message{"testing", "1..2..3"}
-	_, err := firebaseRoot.Update("/messages", msg)
+	body, err := firebaseRoot.Update("/messages", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
+	t.Logf("%q", body)
 }
 
 func TestDeleteObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
-	_, err := firebaseRoot.Delete("/messages")
+	body, err := firebaseRoot.Delete("/messages")
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
+	t.Logf("%q", body)
 }
