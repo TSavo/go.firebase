@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-const firebase_url = "https://go-firebase.firebaseio.com/"
+const firebase_url = "http://www.mocky.io/"
 
 func TestNewFirebase(t *testing.T) {
 	// Create new firebase instance
@@ -22,10 +22,10 @@ func TestNewFirebase(t *testing.T) {
 }
 
 func TestBuildURL(t *testing.T) {
-	firebaseRoot := New(firebase_url)
+	firebaseRoot := New("https://your-firebase.firebaseio.com/")
 	url := firebaseRoot.BuildURL("/messages")
-	if url != "https://go-firebase.firebaseio.com/messages" {
-		t.Errorf("Expected URL: %q, Actual: %q", "https://go-firebase.firebaseio.com/messages", url)
+	if url != "https://your-firebase.firebaseio.com/messages" {
+		t.Errorf("Expected URL: %q, Actual: %q", "https://your-firebase.firebaseio.com/messages", url)
 	}
 }
 
@@ -39,7 +39,7 @@ func TestSetObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	msg := Message{"testing", "1..2..3"}
 
-	body, err := firebaseRoot.Set("/messages/1", msg)
+	body, err := firebaseRoot.Set("v2/5185415ba171ea3a00704eed", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
@@ -48,7 +48,7 @@ func TestSetObject(t *testing.T) {
 
 func TestGetObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
-	body, err := firebaseRoot.Get("/messages/1")
+	body, err := firebaseRoot.Get("v2/5185415ba171ea3a00704eed")
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
@@ -58,7 +58,7 @@ func TestGetObject(t *testing.T) {
 func TestPushObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	msg := Message{"testing", "1..2..3"}
-	body, err := firebaseRoot.Push("/messages", msg)
+	body, err := firebaseRoot.Push("v2/5185415ba171ea3a00704eed", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
@@ -68,7 +68,7 @@ func TestPushObject(t *testing.T) {
 func TestUpdateObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	msg := Message{"testing", "1..2..3"}
-	body, err := firebaseRoot.Update("/messages", msg)
+	body, err := firebaseRoot.Update("v2/5185415ba171ea3a00704eed", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
@@ -77,7 +77,7 @@ func TestUpdateObject(t *testing.T) {
 
 func TestDeleteObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
-	body, err := firebaseRoot.Delete("/messages")
+	body, err := firebaseRoot.Delete("v2/5185415ba171ea3a00704eed")
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
