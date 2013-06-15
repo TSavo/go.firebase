@@ -5,7 +5,7 @@ I wrote a simple REST client in Go for the Firebase backend API. Use this packag
 ## Installation
 
 ````
-go get https://github.com/chourobin/go.firebase
+go get -u https://github.com/chourobin/go.firebase
 ````
 
 ## Usage
@@ -14,7 +14,7 @@ TODO
 
 ## License
 
-Copyright (c) 2012 Robin Chou
+Copyright (c) 2013 Robin Chou
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
