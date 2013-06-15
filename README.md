@@ -10,7 +10,30 @@ go get -u https://github.com/chourobin/go.firebase
 
 ## Usage
 
-TODO
+Include the package in your code and create an instance.
+````
+import "github.com/chourobin/go.firebase"
+
+firebaseRoot = firebase.New("https://your-firebase.firebaseio.com")
+
+// Set the auth token (optional)
+firebaseRoot.auth_token = "your-auth"
+````
+
+Currently go.firebase supports Get, Set, Update, Push, Delete
+````
+msg := Message{testing: "1..2..3"}
+
+firebaseRoot.Set("/path", msg) // Returns data in json
+
+firebaseRoot.Get("/path") // Returns data in json
+
+firebaseRoot.Push("/path", msg) // Returns data in json
+
+firebaseRoot.Update("/path", msg) // Returns data in json
+
+firebaseRoot.Delete("/path") // Returns true or false
+````
 
 ## License
 
