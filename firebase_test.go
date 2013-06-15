@@ -24,8 +24,8 @@ func TestNewFirebase(t *testing.T) {
 func TestBuildURL(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	url := firebaseRoot.BuildURL("/messages")
-	if url != firebase_url+"messages" {
-		t.Errorf("Expected URL: %q, Actual: %q", firebase_url+"messages", url)
+	if url != "https://go-firebase.firebaseio.com/messages" {
+		t.Errorf("Expected URL: %q, Actual: %q", "https://go-firebase.firebaseio.com/messages", url)
 	}
 }
 
@@ -39,18 +39,20 @@ func TestSetObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	msg := Message{"testing", "1..2..3"}
 
-	_, err := firebaseRoot.Set("/messages/1", msg)
+	body, err := firebaseRoot.Set("/messages/1", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
+	t.Logf("%q", body)
 }
 
 func TestGetObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
-	_, err := firebaseRoot.Get("/messages")
+	body, err := firebaseRoot.Get("/messages/1")
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
+	t.Logf("%q", body)
 }
 
 func TestPushObject(t *testing.T) {
@@ -65,7 +67,7 @@ func TestPushObject(t *testing.T) {
 func TestUpdateObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	msg := Message{"testing", "1..2..3"}
-	_, err := firebaseRoot.Update("/messages", msg)
+	_, err := firebaseRoot.Update("/messages/1", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}

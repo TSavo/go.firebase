@@ -104,7 +104,7 @@ func (f *firebaseRoot) SendRequest(method string, path string, body io.Reader) (
 	url := f.BuildURL(path)
 
 	// create a put request
-	req, err := http.NewRequest(method, url, body)
+	req, err := http.NewRequest(method, url+".json", body)
 	if err != nil {
 		return nil, err
 	}
