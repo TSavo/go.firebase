@@ -2,7 +2,11 @@
 package firebase
 
 import (
+	"fmt"
+	"bytes"
+	"net/http"
 	"encoding/json"
+	"io/ioutil"
 )
 
 // Firebase struct
@@ -25,16 +29,38 @@ Instance Methods
 Firebase Package - REST Interface
 */
 
-// Writes and returns the data
+// Writes and returns the data to firebase endpoint
 // Example: firebase.Set('/users/info', [struct]) => []byte(data), error
 func (f *firebaseRoot) set(path string, v interface{}) ([]byte, error) {
-	json, err := json.Marshal(v)
+	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
-	// send JSON to firebase
+	json := bytes.NewBuffer(b)
 
-	return json, nil
+	// TODO: Construct from Base URI
+	// create a put request
+	req, err := http.NewRequest("PUT", "http://example.com", json)
+	if err != nil {
+		return nil, err
+	}
+
+	// send JSON to firebase
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("bad http response: %v", resp.Status)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
 }
 
 // // Returns the data at a path
@@ -43,7 +69,7 @@ func (f *firebaseRoot) set(path string, v interface{}) ([]byte, error) {
 // }
 
 // // Writes the data, returns the key name of the data added
-// // Example: firebase.Push('users', {'name' => 'Oscar'}) => {'id':'-INOQPH-aV_psbk3ZXEX'}
+// // Example: firebase.Push('users', [struct]) => {'id':'-INOQPH-aV_psbk3ZXEX'}
 // func Push(path string) string {
 
 // }

@@ -25,13 +25,12 @@ type Message struct {
 }
 
 func TestSetObject(t *testing.T) {
-
 	// Create new firebase instance
 	firebaseRoot := New("http://example.com")
 	msg := Message{"testing", "1..2..3"}
 
-	_, err := firebaseRoot.set("/users", msg)
+	_, err := firebaseRoot.set("/messages", msg)
 	if err != nil {
-		t.Error("Error seting object")
+		t.Errorf("Error: %s", err)
 	}
 }
