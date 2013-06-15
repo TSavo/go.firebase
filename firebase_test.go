@@ -67,7 +67,7 @@ func TestPushObject(t *testing.T) {
 func TestUpdateObject(t *testing.T) {
 	firebaseRoot := New(firebase_url)
 	msg := Message{"testing", "1..2..3"}
-	_, err := firebaseRoot.Update("/messages/1", msg)
+	_, err := firebaseRoot.Update("/messages", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
