@@ -122,11 +122,11 @@ func (f *firebaseRoot) SendRequest(method string, path string, body io.Reader) (
 		return nil, err
 	}
 
-	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("Bad HTTP Response: %v", resp.Status)
 	}
 
+	defer resp.Body.Close()
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
