@@ -2,16 +2,18 @@
 package firebase
 
 import (
-	"fmt"
 	"bytes"
-	"net/http"
 	"encoding/json"
+	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
+	"net/url"
 )
 
 // Firebase struct
 type firebaseRoot struct {
-	base_uri   string
+	base_url   string
 	auth_token string
 }
 
@@ -21,7 +23,7 @@ Class Methods
 
 // Construct a firebase type
 func New(url string) *firebaseRoot {
-	return &firebaseRoot{base_uri: url}
+	return &firebaseRoot{base_url: url}
 }
 
 /*
@@ -31,16 +33,78 @@ Firebase Package - REST Interface
 
 // Writes and returns the data to the firebase endpoint
 // Example: firebase.Set('/users/info', [struct]) => []byte(data), error
-func (f *firebaseRoot) set(path string, v interface{}) ([]byte, error) {
+func (f *firebaseRoot) Set(path string, v interface{}) ([]byte, error) {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
 	json := bytes.NewBuffer(b)
 
-	// TODO: Construct from Base URI
+	body, err := f.SendRequest("PUT", path, json)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
+
+// Returns the data at a path
+func (f *firebaseRoot) Get(path string) ([]byte, error) {
+	body, err := f.SendRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+	return body, nil
+}
+
+// Writes the data, returns the key name of the data added
+// Example: firebase.Push('users', [struct]) => {'id':'-INOQPH-aV_psbk3ZXEX'}
+func (f *firebaseRoot) Push(path string, v interface{}) ([]byte, error) {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return nil, err
+	}
+	json := bytes.NewBuffer(b)
+
+	body, err := f.SendRequest("POST", path, json)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
+
+// Updates the data at path and returns the data. Does not delete omitted children.
+func (f *firebaseRoot) Update(path string, v interface{}) ([]byte, error) {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return nil, err
+	}
+	json := bytes.NewBuffer(b)
+
+	body, err := f.SendRequest("POST", path, json)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
+
+// Deletes the data and returns true or false
+func (f *firebaseRoot) Delete(path string) (bool, error) {
+	_, err := f.SendRequest("DELETE", path, nil)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// Send HTTP Request, return data
+func (f *firebaseRoot) SendRequest(method string, path string, body io.Reader) ([]byte, error) {
+	url := f.BuildURL(path)
+
 	// create a put request
-	req, err := http.NewRequest("PUT", "http://example.com", json)
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -56,31 +120,31 @@ func (f *firebaseRoot) set(path string, v interface{}) ([]byte, error) {
 		return nil, fmt.Errorf("Bad HTTP Response: %v", resp.Status)
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	return body, nil
+	return b, nil
 }
 
-// // Returns the data at a path
-// func Get(path string) string {
+// Build URL based on base_url and relative path
+func (f *firebaseRoot) BuildURL(path string) string {
+	base_url, _ := url.Parse(f.base_url)
+	url, _ := toAbsURL(base_url, path)
+	return url
+}
 
-// }
+/*
+Helper Methods
+*/
 
-// // Writes the data, returns the key name of the data added
-// // Example: firebase.Push('users', [struct]) => {'id':'-INOQPH-aV_psbk3ZXEX'}
-// func Push(path string) string {
+func toAbsURL(base_url *url.URL, path string) (string, error) {
+	relurl, err := url.Parse(path)
+	if err != nil {
+		return "", err
+	}
+	absurl := base_url.ResolveReference(relurl)
 
-// }
-
-// // Deletes the data and returns true or false
-// func Delete(path string) bool {
-
-// }
-
-// // Updates the data at path and returns the data. Does not delete omitted children.
-// func Update(path string) string {
-
-// }
+	return absurl.String(), nil
+}
