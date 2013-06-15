@@ -81,5 +81,5 @@ func TestDeleteObject(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	t.Logf("%q", body)
+	t.Logf("%t", body)
 }
