@@ -103,6 +103,14 @@ func (f *firebaseRoot) Delete(path string) (bool, error) {
 func (f *firebaseRoot) SendRequest(method string, path string, body io.Reader) ([]byte, error) {
 	url := f.BuildURL(path)
 
+	// Append .json to use Firebase REST API
+	url += ".json"
+
+	// Append auth token if one exists
+	if len(f.auth_token) != 0 {
+		url += "?auth=" + f.auth_token
+	}
+
 	// create a request
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
@@ -132,15 +140,6 @@ func (f *firebaseRoot) SendRequest(method string, path string, body io.Reader) (
 func (f *firebaseRoot) BuildURL(path string) string {
 	base_url, _ := url.Parse(f.base_url)
 	url, _ := toAbsURL(base_url, path)
-
-	// Append .json to use Firebase REST API
-	url += ".json"
-
-	// Append auth token if one exists
-	if len(f.auth_token) != 0 {
-		url += "?auth=" + f.auth_token
-	}
-
 	return url
 }
 

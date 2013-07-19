@@ -9,6 +9,11 @@ import (
 
 const firebase_url = "https://go-firebase-test.firebaseio.com/"
 
+type Message struct {
+	Name string
+	Body string
+}
+
 func TestNewFirebase(t *testing.T) {
 	// Create new firebase instance
 	firebaseRoot := New(firebase_url)
@@ -27,14 +32,9 @@ func TestNewFirebase(t *testing.T) {
 func TestBuildURL(t *testing.T) {
 	firebaseRoot := New("https://your-firebase.firebaseio.com/")
 	url := firebaseRoot.BuildURL("/messages")
-	if url != "https://your-firebase.firebaseio.com/messages.json" {
-		t.Errorf("Expected URL: %q, Actual: %q", "https://your-firebase.firebaseio.com/messages.json", url)
+	if url != "https://your-firebase.firebaseio.com/messages" {
+		t.Errorf("Expected URL: %q, Actual: %q", "https://your-firebase.firebaseio.com/messages", url)
 	}
-}
-
-type Message struct {
-	Name string
-	Body string
 }
 
 func TestSetObject(t *testing.T) {
@@ -56,9 +56,10 @@ func TestSetObject(t *testing.T) {
 }
 
 func TestGetObject(t *testing.T) {
+	response := `{"Name":"testing","Body":"1..2..3"}`
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{""}`)
+		fmt.Fprintf(w, response)
 	}))
 	defer ts.Close()
 
@@ -67,13 +68,17 @@ func TestGetObject(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	t.Logf("%q", body)
+
+	if g, w := string(body), response; g != w {
+		t.Errorf("Response mismatch: got %q, want %q", g, w)
+	}
 }
 
 func TestPushObject(t *testing.T) {
+	response := `{"Name":"testing","Body":"1..2..3"}`
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{""}`)
+		fmt.Fprintf(w, response)
 	}))
 	defer ts.Close()
 
@@ -83,13 +88,17 @@ func TestPushObject(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	t.Logf("%q", body)
+
+	if g, w := string(body), response; g != w {
+		t.Errorf("Response mismatch: got %q, want %q", g, w)
+	}
 }
 
 func TestUpdateObject(t *testing.T) {
+	response := `{"Name":"testing","Body":"1..2..3"}`
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{""}`)
+		fmt.Fprintf(w, response)
 	}))
 	defer ts.Close()
 
@@ -99,13 +108,17 @@ func TestUpdateObject(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	t.Logf("%q", body)
+
+	if g, w := string(body), response; g != w {
+		t.Errorf("Response mismatch: got %q, want %q", g, w)
+	}
 }
 
 func TestDeleteObject(t *testing.T) {
+	response := `{""}`
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{""}`)
+		fmt.Fprintf(w, response)
 	}))
 	defer ts.Close()
 
@@ -114,5 +127,8 @@ func TestDeleteObject(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	t.Logf("%t", body)
+
+	if body != true {
+		t.Error("Error: Delete failed")
+	}
 }
