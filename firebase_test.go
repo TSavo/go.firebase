@@ -38,9 +38,10 @@ func TestBuildURL(t *testing.T) {
 }
 
 func TestSetObject(t *testing.T) {
+	response := `{"Name":"testing","Body":"1..2..3"}`
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{""}`)
+		fmt.Fprintf(w, response)
 	}))
 	defer ts.Close()
 
@@ -52,7 +53,10 @@ func TestSetObject(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	t.Logf("%q", body)
+
+	if g, w := string(body), response; g != w {
+		t.Errorf("Response mismatch: got %q, want %q", g, w)
+	}
 }
 
 func TestGetObject(t *testing.T) {
