@@ -2,6 +2,7 @@ package firebase
 
 import (
 	"testing"
+	"time"
 )
 
 const firebase_url = "https://go-firebase-test.firebaseio.com/"
@@ -44,6 +45,8 @@ func TestSetObject(t *testing.T) {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%q", body)
+
+	time.Sleep(time.Second)
 }
 
 func TestGetObject(t *testing.T) {
@@ -53,6 +56,8 @@ func TestGetObject(t *testing.T) {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%q", body)
+
+	time.Sleep(time.Second)
 }
 
 func TestPushObject(t *testing.T) {
@@ -63,6 +68,8 @@ func TestPushObject(t *testing.T) {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%q", body)
+
+	time.Sleep(time.Second)
 }
 
 func TestUpdateObject(t *testing.T) {
@@ -73,6 +80,8 @@ func TestUpdateObject(t *testing.T) {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%q", body)
+
+	time.Sleep(time.Second)
 }
 
 func TestDeleteObject(t *testing.T) {
@@ -82,4 +91,6 @@ func TestDeleteObject(t *testing.T) {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%t", body)
+
+	time.Sleep(time.Second)
 }
