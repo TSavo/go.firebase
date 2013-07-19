@@ -1,8 +1,10 @@
 package firebase
 
 import (
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
-	"time"
 )
 
 const firebase_url = "https://go-firebase-test.firebaseio.com/"
@@ -36,8 +38,14 @@ type Message struct {
 }
 
 func TestSetObject(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{""}`)
+	}))
+	defer ts.Close()
+
 	// Create new firebase instance
-	firebaseRoot := New(firebase_url)
+	firebaseRoot := New(ts.URL)
 	msg := Message{"testing", "1..2..3"}
 
 	body, err := firebaseRoot.Set("1", msg)
@@ -45,52 +53,66 @@ func TestSetObject(t *testing.T) {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%q", body)
-
-	time.Sleep(time.Second)
 }
 
 func TestGetObject(t *testing.T) {
-	firebaseRoot := New(firebase_url)
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{""}`)
+	}))
+	defer ts.Close()
+
+	firebaseRoot := New(ts.URL)
 	body, err := firebaseRoot.Get("1")
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%q", body)
-
-	time.Sleep(time.Second)
 }
 
 func TestPushObject(t *testing.T) {
-	firebaseRoot := New(firebase_url)
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{""}`)
+	}))
+	defer ts.Close()
+
+	firebaseRoot := New(ts.URL)
 	msg := Message{"testing", "1..2..3"}
 	body, err := firebaseRoot.Push("/", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%q", body)
-
-	time.Sleep(time.Second)
 }
 
 func TestUpdateObject(t *testing.T) {
-	firebaseRoot := New(firebase_url)
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{""}`)
+	}))
+	defer ts.Close()
+
+	firebaseRoot := New(ts.URL)
 	msg := Message{"testing", "1..2..3"}
 	body, err := firebaseRoot.Update("1", msg)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%q", body)
-
-	time.Sleep(time.Second)
 }
 
 func TestDeleteObject(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{""}`)
+	}))
+	defer ts.Close()
+
 	firebaseRoot := New(firebase_url)
 	body, err := firebaseRoot.Delete("1")
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
 	t.Logf("%t", body)
-
-	time.Sleep(time.Second)
 }
