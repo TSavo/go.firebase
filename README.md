@@ -35,8 +35,6 @@ firebaseRoot.Update("/path", msg)
 firebaseRoot.Delete("/path")
 ````
 
-NOTE: Firebase sets rate limits on how often you can send requests. Be mindful of that when using go.firebase.
-
 ## License
 
 Copyright (c) 2013 Robin Chou
